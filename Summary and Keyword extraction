@@ -1,0 +1,85 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import os
+
+pip install bert-extractive-summarizer
+
+import warnings
+warnings.filterwarnings("ignore")
+warnings.resetwarnings()
+
+from summarizer import Summarizer
+def generate_summary(user_texts):
+    model = Summarizer()
+    summaries = []
+    for user_text in user_texts:
+        summary = model(user_text, ratio=0.5)  # Adjust the ratio as needed
+        # Extract the first three sentences as the summary
+        sentences = summary.split('. ')
+        summary_3_lines = '. '.join(sentences[:3])
+        summaries.append(summary_3_lines)
+    return summaries
+num_texts = int(input("Enter the number of texts you want to summarize: "))
+user_texts = []
+for i in range(num_texts):
+    text = input("Enter text {}:".format(i + 1))
+    user_texts.append(text)
+summaries = generate_summary(user_texts)
+for i, summary in enumerate(summaries):
+    print(f"Summary for Text {i + 1}:")
+    print(summary)
+    print()
+
+# Prompt the user for the number of texts they want to input
+num_texts = int(input("Enter the number of texts you want to summarize: "))
+
+# Take input from the user for each text
+user_texts = []
+for i in range(num_texts):
+    text = input("Enter text {}:".format(i + 1))
+    user_texts.append(text)
+
+# Generate and print summaries for all user texts
+summaries = generate_summary(user_texts)
+
+import warnings
+
+# Ignore DeprecationWarning from IPython
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="IPython")
+
+num_texts = int(input("Enter the number of texts you want to summarize: "))
+user_texts = []
+for i in range(num_texts):
+    text = input("Enter text {}:".format(i + 1))
+    user_texts.append(text)
+
+summaries = generate_summary(user_texts)
+for i, summary in enumerate(summaries):
+    print(f"Summary for Text {i + 1}:")
+    print(summary)
+    print()
+
+for i, summary in enumerate(summaries):
+    print(f"Summary for Text {i + 1}:")
+    print(summary)
+    print()
+
+!pip install git+https://github.com/LIAAD/yake
+
+import yake
+def get_keywords_yake(text):
+    keyword_extractor = yake.KeywordExtractor(lan='en', n=3, dedupLim=0.9, dedupFunc='seqm', windowsSize=1, top=10)
+    keywords = keyword_extractor.extract_keywords(text)
+    return keywords
+def print_results(keywords):
+    print("Keywords:")
+    for score, keyword in keywords:
+        try:
+            score = float(score)
+            print("{} ({:.2f})".format(keyword, score))
+        except ValueError:
+            print("{} (Score: {})".format(keyword, score))
+for i, text in enumerate(summaries):
+    print(f"\nKeywords for Text {i + 1}:")
+    keywords = get_keywords_yake(text)
+    print_results(keywords)
